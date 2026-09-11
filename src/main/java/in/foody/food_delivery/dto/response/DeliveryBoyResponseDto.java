@@ -1,7 +1,9 @@
-package in.foody.food_delivery.entity;
+package in.foody.food_delivery.dto.response;
 
+import in.foody.food_delivery.entity.Order;
 import in.foody.food_delivery.entity.enums.AccountStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,26 +15,18 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-public class DeliveryBoy {
+@AllArgsConstructor
+public class DeliveryBoyResponseDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String userName;
-    private String Password;
     private int age;
     private String email;
 
     private double earnings;
 
-    //relations
-    @OneToMany(mappedBy = "deliveryBoy")
-    private List<Order> orders=new ArrayList<>();
+    private List<OrderResponseDto> orders=new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
-
-
 }

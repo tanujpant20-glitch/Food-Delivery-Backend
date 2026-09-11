@@ -29,4 +29,6 @@ public class Address {
 
     @OneToOne(mappedBy = "address")
     private Restaurant restaurant;
+    private double langitude;
+    private double lattitude;
 }

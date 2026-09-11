@@ -1,8 +1,6 @@
 package in.foody.food_delivery.entity;
 
 import in.foody.food_delivery.entity.enums.OrderStatus;
-import in.foody.food_delivery.entity.enums.PaymentMode;
-import in.foody.food_delivery.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +26,7 @@ public class Order {
     private OrderStatus orderStatus;
 
     private LocalTime orderedTime;
+    private LocalDateTime deliveredAt;
     private LocalDateTime orderedAt;
     @PrePersist
     public void ordertimedate(){
@@ -54,4 +53,6 @@ public class Order {
 
     @OneToOne(mappedBy = "order")
     private Payment payment;
+
+
 }

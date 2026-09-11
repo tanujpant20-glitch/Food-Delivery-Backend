@@ -1,7 +1,10 @@
-package in.foody.food_delivery.entity;
+package in.foody.food_delivery.dto.response;
 
+
+import in.foody.food_delivery.entity.*;
 import in.foody.food_delivery.entity.enums.AccountStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,11 +17,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-public class Restaurant {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@AllArgsConstructor
+public class RestaurantResponseDto {
     private Long id;
 
     private int rating;
@@ -28,29 +28,19 @@ public class Restaurant {
     private LocalTime openTiming;
     private LocalTime closingTiming;
     private LocalDate createdAt;
-    @PrePersist
-    public void onCreated(){
-        createdAt=LocalDate.now();
-    }
+
     private List<String> bannerImageUrl=new ArrayList<>();
     @Lob
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "addressId")
     private Address address;
 
-    @Enumerated(EnumType.STRING)
     private AccountStatus restaurantStatus;
 
-    @OneToMany(mappedBy = "restaurant")
-    private List<Order> orders=new ArrayList<>();
+    private List<OrderResponseDto> orders=new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "restaurant")
-    private List<FoodItems> foodItems=new ArrayList<>();
+    private List<FoodItemsResponseDto> foodItems=new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "userid")
-    private User restaurantOwner;
+    private List<RestaurantResponseDto> restaurantsOwned;
 }

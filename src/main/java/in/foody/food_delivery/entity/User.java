@@ -19,7 +19,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int userName;
+
+    private String userName;
     private int age;
     private String password;
     private String email;
@@ -37,6 +38,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Restaurant> restaurants;
+    @OneToMany(mappedBy = "restaurantOwner")
+    private List<Restaurant> restaurantsOwned;
 }
