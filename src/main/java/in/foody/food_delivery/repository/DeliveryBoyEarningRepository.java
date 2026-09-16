@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface DeliveryBoyEarningRepository extends JpaRepository<DeliveryBoyEarnings, Long> {
 
-    public List<DeliveryBoyEarnings> findByDeliverBoy(DeliveryBoy deliveryBoy);
+    public List<DeliveryBoyEarnings> findByDeliveryBoy(DeliveryBoy deliveryBoy);
 
     public Optional<DeliveryBoyEarnings> findByOrder(Order order);
 }

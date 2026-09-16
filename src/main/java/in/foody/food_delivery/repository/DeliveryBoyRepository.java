@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface DeliveryBoyRepository extends JpaRepository<DeliveryBoy, Long> {
 
     public List<DeliveryBoy> findByAccountStatus(AccountStatus status);
+    public DeliveryBoy findByName(String username);
 
-    public Optional<DeliveryBoy> findByOrder(Order order);
+    public Optional<DeliveryBoy> findByEmail(String email);
+    public Optional<DeliveryBoy> findByOrders(Order order);
 }

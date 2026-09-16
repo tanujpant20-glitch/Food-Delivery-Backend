@@ -50,4 +50,40 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(exceptionResponse);
     }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<ExceptionResponse> UserAlreadyExistException(
+            UserAlreadyExistException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.ALREADY_REPORTED.value(),
+                HttpStatus.ALREADY_REPORTED.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.ALREADY_REPORTED)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidCredentialsException(
+            InvalidCredentialsException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionResponse);
+    }
 }
