@@ -1,5 +1,8 @@
 package in.foody.food_delivery.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import in.foody.food_delivery.entity.CartItem;
 import in.foody.food_delivery.entity.OrderItems;
 import in.foody.food_delivery.entity.Restaurant;
@@ -18,12 +21,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoodItemsRequestDto {
-    @Lob
     private String shortDescription;
-    @Lob
     private String longDescription;
     private double price;
-    private boolean isAvailable;
+    @JsonProperty("isAvailable")
+    @JsonSetter(nulls = Nulls.SKIP)
+    private Boolean isAvailable=true;
+    @ElementCollection
     private List<String> imageUrl=new ArrayList<>();
     private int rating;
 

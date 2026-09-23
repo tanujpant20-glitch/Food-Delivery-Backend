@@ -106,7 +106,7 @@ public class SecurityConfig {
                                                    JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception{
      httpSecurity.csrf(csrf-> csrf.disable())
              .authorizeHttpRequests(auth->auth
-                     .requestMatchers("/api/auth/user/register", "/api/auth/user/login" , "/api/auth/deiveryBoy/register","/api/auth/delivery/login").permitAll()
+                     .requestMatchers("/api/auth/user/register", "/api/auth/user/login" , "/api/auth/deliveryPartner/register","/api/auth/deliveryPartner/login", "/api/public/**").permitAll()
                      .anyRequest().authenticated()
              ).
      sessionManagement(session -> session

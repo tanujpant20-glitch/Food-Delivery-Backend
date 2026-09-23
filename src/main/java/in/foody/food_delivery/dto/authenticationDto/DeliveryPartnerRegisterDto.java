@@ -20,7 +20,6 @@ public class DeliveryPartnerRegisterDto {
         @Email(message = "Invalid email format")
         private String email;
 
-        @NotBlank(message = "age is required")
         private int age;
 
         @NotBlank(message = "Phone number is required")

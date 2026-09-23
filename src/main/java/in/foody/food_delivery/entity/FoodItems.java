@@ -14,6 +14,17 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class FoodItems {
+    public FoodItems(FoodType foodType,String shortDescription, String longDescription
+    ,double price, boolean isAvailable, List<String> imageUrl, int rating){
+        this.foodType=foodType;
+        this.longDescription=longDescription;
+        this.shortDescription=shortDescription;
+        this.price=price;
+        this.isAvailable=isAvailable;
+        this.imageUrl=imageUrl;
+        this.rating=rating;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

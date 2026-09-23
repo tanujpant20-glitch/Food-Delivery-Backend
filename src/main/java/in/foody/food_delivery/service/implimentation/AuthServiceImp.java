@@ -122,6 +122,8 @@ public class AuthServiceImp implements AuthService {
 
     private     DeliveryBoy convertToDeliveryBoy(DeliveryPartnerRegisterDto deliveryPartnerRegisterDto){
         DeliveryBoy deliveryBoy=new DeliveryBoy();
+        deliveryBoy.setName(deliveryPartnerRegisterDto.getName());
+        deliveryBoy.setPanNumber(deliveryPartnerRegisterDto.getPanNumber());
         deliveryBoy.setEmail(deliveryPartnerRegisterDto.getEmail());
         deliveryBoy.setAge(deliveryPartnerRegisterDto.getAge());
         deliveryBoy.setPassword(bCryptPasswordEncoder.encode(deliveryPartnerRegisterDto.getPassword()));

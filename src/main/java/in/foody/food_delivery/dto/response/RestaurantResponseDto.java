@@ -20,27 +20,17 @@ import java.util.List;
 @AllArgsConstructor
 public class RestaurantResponseDto {
     private Long id;
-
+    private String name;
     private int rating;
     private int totalRating;
     private String famousFood;
     private boolean isOpen;
     private LocalTime openTiming;
     private LocalTime closingTiming;
-    private LocalDate createdAt;
-
     private List<String> bannerImageUrl=new ArrayList<>();
     @Lob
     private String description;
-
     private Address address;
-
     private AccountStatus restaurantStatus;
-
-    private List<OrderResponseDto> orders=new ArrayList<>();
-
-
     private List<FoodItemsResponseDto> foodItems=new ArrayList<>();
-
-    private List<RestaurantResponseDto> restaurantsOwned;
 }

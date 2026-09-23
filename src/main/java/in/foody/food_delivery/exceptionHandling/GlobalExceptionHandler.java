@@ -86,4 +86,58 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exceptionResponse);
     }
+
+    @ExceptionHandler(RestaurantAlreadyExistException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            RestaurantAlreadyExistException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(RestaurantNotExistException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            RestaurantNotExistException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            UnauthorizedAccessException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(exceptionResponse);
+    }
 }

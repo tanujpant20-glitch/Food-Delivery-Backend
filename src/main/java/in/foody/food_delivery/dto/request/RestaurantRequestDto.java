@@ -1,5 +1,6 @@
 package in.foody.food_delivery.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import in.foody.food_delivery.entity.Address;
 import in.foody.food_delivery.entity.FoodItems;
 import in.foody.food_delivery.entity.Order;
@@ -20,16 +21,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestaurantRequestDto {
+    private String name;
     private String famousFood;
-    private boolean isOpen;
+    private Boolean isOpen;
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime openTiming;
+
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime closingTiming;
 
+    @ElementCollection
     private List<String> bannerImageUrl=new ArrayList<>();
-    @Lob
     private String description;
 
-    private Address address;
+    private AddressRequestDto address;
 
     private List<FoodItemsRequestDto> foodItems=new ArrayList<>();
 }

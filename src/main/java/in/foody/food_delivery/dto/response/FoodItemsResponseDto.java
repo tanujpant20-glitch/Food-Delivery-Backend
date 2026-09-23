@@ -28,13 +28,8 @@ public class FoodItemsResponseDto {
     private List<String> imageUrl=new ArrayList<>();
     private int rating;
 
-    private CartItemResponseDto cartItem;
 
     private FoodType foodType;
 
-    private List<OrderItemsResponseDto> orderItems;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurantid")
-    private RestaurantResponseDto restaurant;
 }

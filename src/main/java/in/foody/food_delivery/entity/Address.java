@@ -4,18 +4,19 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 public class Address {
+
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String Street;
+    private String street;
     private String pincode;
     private String state;
     private String city;
