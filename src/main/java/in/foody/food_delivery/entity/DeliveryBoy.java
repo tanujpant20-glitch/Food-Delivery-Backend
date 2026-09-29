@@ -61,6 +61,8 @@ public class DeliveryBoy {
     @Column(nullable = false)
     private String bankAccountNumber;
 
+    private String vehicleNumber;
+
     private double earnings;
 
     @Column(nullable = false)

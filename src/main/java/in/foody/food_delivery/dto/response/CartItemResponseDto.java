@@ -16,13 +16,9 @@ public class CartItemResponseDto {
 
     private Long id;
 
-    private int quantities;
+    private Long quantities;
     private double finalPrice;
 
-    private CartResponseDto cart;
-
-    @OneToOne
-    @JoinColumn(name="foodItemId")
     private FoodItemsResponseDto foodItem;
 
 }

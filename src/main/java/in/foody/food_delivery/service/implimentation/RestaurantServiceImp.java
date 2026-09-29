@@ -42,6 +42,7 @@ public class RestaurantServiceImp implements RestaurantService {
         this.userRepository=userRepository;
     }
     @Override
+    @Transactional
     public RestaurantResponseDto createRestaurant(RestaurantRequestDto restaurantRequestDto) {
 
         String name= SecurityContextHolder.getContext()
@@ -62,6 +63,7 @@ public class RestaurantServiceImp implements RestaurantService {
 
 
     @Override
+    @Transactional
     public RestaurantResponseDto updateRestaurant(Long id, RestaurantUpdateDto restaurantRequestDto) {
       Restaurant restaurant= restaurantRepository.findById(id).orElseThrow(()-> new RestaurantNotExistException("No restaurant exists with this id"));
       String email=SecurityContextHolder.getContext().getAuthentication().getName();
@@ -107,6 +109,7 @@ public class RestaurantServiceImp implements RestaurantService {
     }
 
     @Override
+    @Transactional
     public RestaurantResponseDto getRestaurant(Long id) {
         Optional<Restaurant> response=restaurantRepository.findById(id);
         if(response.isPresent()){
@@ -117,6 +120,7 @@ public class RestaurantServiceImp implements RestaurantService {
     }
 
     @Override
+    @Transactional
     public Page<RestaurantResponseDto> getAllRestaurant(Pageable page) {
             Page<Restaurant> restaurants=restaurantRepository.findByRestaurantStatus(page, AccountStatus.ISACTIVE);
         return restaurants
@@ -125,6 +129,7 @@ public class RestaurantServiceImp implements RestaurantService {
     }
 
     @Override
+    @Transactional
     public Page<RestaurantResponseDto> getRestaurantsIsOpenStatus(boolean status, int pageNo, int pageSize) {
         Pageable pageable= PageRequest.of(pageNo, pageSize, Sort.by("id").descending());
        Page<Restaurant> response= restaurantRepository.findByIsOpen(status,pageable);

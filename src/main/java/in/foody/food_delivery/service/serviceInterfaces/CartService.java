@@ -5,7 +5,7 @@ import in.foody.food_delivery.dto.response.CartResponseDto;
 
 public interface CartService {
     public CartResponseDto addToCart(AddItemToCartDto addItemToCartdto);
-    public CartResponseDto getCart(Long userId);
-    public CartResponseDto removeFromCart(Long userId, Long cartId);
-    public CartResponseDto clearCart(Long cartId);
+    public CartResponseDto getCart();
+    public CartResponseDto removeFromCart( Long foodItemId);
+    public String clearCart();
 }

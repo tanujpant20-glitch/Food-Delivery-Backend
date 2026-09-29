@@ -18,6 +18,7 @@ public class AddressResponseDto {
     private String city;
     private String state;
     private String pincode;
+    private String houseNumber;
     private String country;
     private boolean isDefault;
     private LocalDateTime createdAt;

@@ -61,11 +61,11 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     private AccountStatus restaurantStatus=AccountStatus.ISACTIVE;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders=new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FoodItems> foodItems=new ArrayList<>();
 
     @ManyToOne

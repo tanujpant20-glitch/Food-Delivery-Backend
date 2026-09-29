@@ -23,10 +23,14 @@ public class Address {
     private String country;
     private String nearBy;
     private boolean isDefault;
+    private String houseNumber;
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    @OneToOne(mappedBy = "address")
+    private Order order;
 
     @OneToOne(mappedBy = "address")
     private Restaurant restaurant;

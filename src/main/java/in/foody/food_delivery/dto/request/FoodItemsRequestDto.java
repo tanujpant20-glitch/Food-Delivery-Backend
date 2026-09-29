@@ -21,9 +21,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoodItemsRequestDto {
+    private String name;
     private String shortDescription;
     private String longDescription;
-    private double price;
+    private Double price;
     @JsonProperty("isAvailable")
     @JsonSetter(nulls = Nulls.SKIP)
     private Boolean isAvailable=true;

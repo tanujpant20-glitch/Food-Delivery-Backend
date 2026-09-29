@@ -28,6 +28,8 @@ public class Order {
     private LocalTime orderedTime;
     private LocalDateTime deliveredAt;
     private LocalDateTime orderedAt;
+
+    private double totalPrice;
     @PrePersist
     public void ordertimedate(){
         orderedTime=LocalTime.now();
@@ -44,11 +46,15 @@ public class Order {
     @JoinColumn(name = "restaurantId")
     private Restaurant restaurant;
 
+    @OneToOne
+    @JoinColumn(name = "addressId")
+    private Address address;
+
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItems> orderItemsList=new ArrayList<>();
 
     @OneToOne(mappedBy = "order")

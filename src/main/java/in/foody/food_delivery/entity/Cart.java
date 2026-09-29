@@ -23,11 +23,14 @@ public class Cart {
     private User creator;
 
     private LocalDateTime createdAt;
+
+    private Double cartTotal;
     @PrePersist
     public void oncreate(){
         createdAt=LocalDateTime.now();
     }
-    @OneToMany(mappedBy = "cart")
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> listFoodItems=new ArrayList<>();
 
 

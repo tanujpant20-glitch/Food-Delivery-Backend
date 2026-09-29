@@ -5,6 +5,7 @@ import in.foody.food_delivery.dto.response.RestaurantResponseDto;
 import in.foody.food_delivery.dto.update.RestaurantUpdateDto;
 import in.foody.food_delivery.service.implimentation.RestaurantServiceImp;
 import in.foody.food_delivery.service.serviceInterfaces.RestaurantService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,11 +26,21 @@ public class RestaurantController {
         this.restaurantServiceImp=restaurantServiceImp;
     }
 
+    @Operation(
+            summary = "Api to create a new Restaurant",
+            description = "creating a Restaurant ",
+            tags = "Creating Restaurant"
+    )
     @PostMapping("/private/Restaurants/create")
     public ResponseEntity<RestaurantResponseDto> addRestaurant(@Valid @RequestBody RestaurantRequestDto restaurantRequestDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantServiceImp.createRestaurant(restaurantRequestDto));
     }
 
+    @Operation(
+            summary = "Api to get Restaurants",
+            description = "getting multiple Restaurants by status",
+            tags = "Get Restaurant"
+    )
     @GetMapping("/public/Restaurants")
     private ResponseEntity<Page<RestaurantResponseDto>> getAllRestaurant(@RequestParam int pageNo,
                                                                          @RequestParam String sortBy,
@@ -51,22 +62,42 @@ public class RestaurantController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Api to get Restaurant",
+            description = "getting a Restaurant by using UUID",
+            tags = "Get Restaurant"
+    )
     @GetMapping("/public/restaurant/{id}")
     public ResponseEntity<RestaurantResponseDto> getRetaurantById(@PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.FOUND).body(restaurantServiceImp.getRestaurant(id));
     }
 
+    @Operation(
+            summary = "Api to Update Restaurant",
+            description = "Updating a Restaurant by using UUID",
+            tags = "Update Restaurant"
+    )
     @PutMapping("/private/restaurant/{id}")
     public ResponseEntity<RestaurantResponseDto> updateRestaurant(@PathVariable("id") Long id, @RequestBody RestaurantUpdateDto restaurantRequestDto){
         return ResponseEntity.status(HttpStatus.OK).body(restaurantServiceImp.updateRestaurant(id,restaurantRequestDto));
     }
 
+    @Operation(
+            summary = "Api to Delete Restaurant",
+            description = "=Delete a Restaurant by using UUID",
+            tags = "Delete Restaurant"
+    )
     @DeleteMapping("/admin/{id}")
     public ResponseEntity deleteRestaurant(@PathVariable("id") Long id){
         restaurantServiceImp.deleteRestaurant(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Operation(
+            summary = "Api to get Restaurants which are Open",
+            description = "Open Restaurants ",
+            tags = "Get Restaurant"
+    )
     @GetMapping("/public/getOpenRestaurant")
     public ResponseEntity<Page<RestaurantResponseDto>> getOpenRestaurant(@RequestParam int pageNo,
                                                                          @RequestParam int pageSize,

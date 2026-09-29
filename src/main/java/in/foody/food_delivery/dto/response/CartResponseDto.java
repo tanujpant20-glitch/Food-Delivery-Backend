@@ -26,5 +26,10 @@ public class CartResponseDto {
 
     private LocalDateTime createdAt;
 
+    @PrePersist
+    public void create(){
+        this.createdAt=LocalDateTime.now();
+    }
+
     private List<CartItemResponseDto> listFoodItems=new ArrayList<>();
 }

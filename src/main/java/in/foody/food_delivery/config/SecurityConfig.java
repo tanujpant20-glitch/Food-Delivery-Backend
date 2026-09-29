@@ -1,6 +1,7 @@
 package in.foody.food_delivery.config;
 
 import org.hibernate.Session;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,6 +31,11 @@ import java.util.Base64;
 @Configuration
 public class SecurityConfig {
 
+
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -107,6 +113,7 @@ public class SecurityConfig {
      httpSecurity.csrf(csrf-> csrf.disable())
              .authorizeHttpRequests(auth->auth
                      .requestMatchers("/api/auth/user/register", "/api/auth/user/login" , "/api/auth/deliveryPartner/register","/api/auth/deliveryPartner/login", "/api/public/**").permitAll()
+                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
                      .anyRequest().authenticated()
              ).
      sessionManagement(session -> session

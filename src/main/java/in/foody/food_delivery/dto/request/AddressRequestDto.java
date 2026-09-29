@@ -16,5 +16,7 @@ public class AddressRequestDto {
     private String city;
     private String state;
     private String pinCode;
+    private String houseNumber;
+    private String nearBy;
     private String country;
 }

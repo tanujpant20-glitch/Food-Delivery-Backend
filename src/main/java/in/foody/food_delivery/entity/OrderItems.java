@@ -22,7 +22,7 @@ public class OrderItems {
     @JoinColumn(name = "foodItemsid")
     private FoodItems foodItems;
 
-    private int quantities;
+    private Long quantities;
 
     private double getActuallPriceOfOrder(){
         return quantities*foodItems.getPrice();

@@ -2,9 +2,11 @@ package in.foody.food_delivery.entity;
 
 import in.foody.food_delivery.entity.enums.FoodType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class FoodItems {
     public FoodItems(FoodType foodType,String shortDescription, String longDescription
@@ -28,6 +31,8 @@ public class FoodItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NonNull
+    private String name;
     @Lob
     private String shortDescription;
     @Lob
@@ -47,4 +52,6 @@ public class FoodItems {
     @ManyToOne
     @JoinColumn(name = "restaurantid")
     private Restaurant restaurant;
+
+    private boolean isDeleted=false;
 }

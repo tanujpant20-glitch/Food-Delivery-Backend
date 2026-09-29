@@ -31,7 +31,7 @@ public class User {
         this.createdAt=LocalDateTime.now();
     }
     //relations
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses=new ArrayList<>();
 
 
@@ -47,4 +47,7 @@ public class User {
 
     @OneToMany(mappedBy = "restaurantOwner")
     private List<Restaurant> restaurantsOwned;
+
+    @OneToOne(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
 }

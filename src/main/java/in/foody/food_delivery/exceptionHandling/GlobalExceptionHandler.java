@@ -140,4 +140,204 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.FORBIDDEN)
                 .body(exceptionResponse);
     }
+
+    @ExceptionHandler(FoodItemNotExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            FoodItemNotExistsException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(FoodItemNotAvailableException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            FoodItemNotAvailableException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionResponse);
+    }
+    @ExceptionHandler(  CartDoesNotExistEception.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            CartDoesNotExistEception ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(  AddressAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            AddressAlreadyExistsException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.ALREADY_REPORTED.value(),
+                HttpStatus.ALREADY_REPORTED.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.ALREADY_REPORTED)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(  AddressNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            AddressNotFoundException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(  RestaurantNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleRestaurantAlreadyExistException(
+            RestaurantNotFoundException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(  FoodItemAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleFoodItemAlreadyExistsException(
+            FoodItemAlreadyExistsException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.ALREADY_REPORTED.value(),
+                HttpStatus.ALREADY_REPORTED.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.ALREADY_REPORTED)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(  BadRequestException.class)
+    public ResponseEntity<ExceptionResponse> handleBadRequestException(
+            BadRequestException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionResponse);
+    }
+
+
+    @ExceptionHandler(  PaymentNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handlePaymentNotFoundException(
+            PaymentNotFoundException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exceptionResponse);
+    }
+
+
+    @ExceptionHandler(  OrderNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleOrderNotFoundException(
+            OrderNotFoundException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(  ResourceNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleResourceNotFoundException(
+            ResourceNotFoundException ex, HttpServletRequest rs
+    ){
+
+        ExceptionResponse exceptionResponse=new ExceptionResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage(),
+                rs.getRequestURI()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exceptionResponse);
+    }
+
 }

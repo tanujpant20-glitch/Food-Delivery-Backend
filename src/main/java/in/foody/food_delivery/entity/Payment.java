@@ -20,7 +20,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long transactionId;
+    private String transactionId;
 
     @Enumerated(EnumType.STRING)
     private PaymentMode paymentMode;
