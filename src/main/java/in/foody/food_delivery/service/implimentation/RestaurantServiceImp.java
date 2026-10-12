@@ -17,6 +17,8 @@ import in.foody.food_delivery.exceptionHandling.UserNotFoundException;
 import in.foody.food_delivery.repository.RestaurantRepository;
 import in.foody.food_delivery.repository.UserRepository;
 import in.foody.food_delivery.service.serviceInterfaces.RestaurantService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,7 +44,7 @@ public class RestaurantServiceImp implements RestaurantService {
         this.userRepository=userRepository;
     }
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public RestaurantResponseDto createRestaurant(RestaurantRequestDto restaurantRequestDto) {
 
         String name= SecurityContextHolder.getContext()
@@ -63,7 +65,8 @@ public class RestaurantServiceImp implements RestaurantService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
+    @CacheEvict(value = "restaurants", key = "#id")
     public RestaurantResponseDto updateRestaurant(Long id, RestaurantUpdateDto restaurantRequestDto) {
       Restaurant restaurant= restaurantRepository.findById(id).orElseThrow(()-> new RestaurantNotExistException("No restaurant exists with this id"));
       String email=SecurityContextHolder.getContext().getAuthentication().getName();
@@ -100,7 +103,8 @@ public class RestaurantServiceImp implements RestaurantService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
+    @CacheEvict(value = "restaurants", key = "#id")
     public void deleteRestaurant(Long id) {
          Restaurant restaurant=restaurantRepository.findById(id).orElseThrow(()->new RestaurantNotExistException("No Restaurant exists"));
          restaurant.setRestaurantStatus(AccountStatus.DEACTIVATED);
@@ -109,7 +113,8 @@ public class RestaurantServiceImp implements RestaurantService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
+    @Cacheable(value = "restaurants", key = "#id")
     public RestaurantResponseDto getRestaurant(Long id) {
         Optional<Restaurant> response=restaurantRepository.findById(id);
         if(response.isPresent()){
@@ -120,7 +125,7 @@ public class RestaurantServiceImp implements RestaurantService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<RestaurantResponseDto> getAllRestaurant(Pageable page) {
             Page<Restaurant> restaurants=restaurantRepository.findByRestaurantStatus(page, AccountStatus.ISACTIVE);
         return restaurants
@@ -129,7 +134,7 @@ public class RestaurantServiceImp implements RestaurantService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<RestaurantResponseDto> getRestaurantsIsOpenStatus(boolean status, int pageNo, int pageSize) {
         Pageable pageable= PageRequest.of(pageNo, pageSize, Sort.by("id").descending());
        Page<Restaurant> response= restaurantRepository.findByIsOpen(status,pageable);

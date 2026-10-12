@@ -26,6 +26,8 @@ public class CartResponseDto {
 
     private LocalDateTime createdAt;
 
+    private Double totalPrice;
+
     @PrePersist
     public void create(){
         this.createdAt=LocalDateTime.now();

@@ -92,6 +92,17 @@
 			<artifactId>razorpay-java</artifactId>
 			<version>1.4.8</version>
 		</dependency>
+		<!-- 1. Redis Dependency -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<!-- 2. Kafka Dependency -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
 		</dependencies>
 
 	<build>

@@ -16,25 +16,34 @@ import in.foody.food_delivery.repository.UserRepository;
 import in.foody.food_delivery.service.serviceInterfaces.CartService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class CartServiceImp implements CartService {
 
     private FoodItemsRepository foodItemsRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
     private UserRepository userRepository;
     private CartRepository cartRepository;
     private ModelMapper modelMapper;
+    private static final String CART_PREFIX = "USER_CART:";
     public CartServiceImp(FoodItemsRepository foodItemsRepository
     ,UserRepository userRepository,
-                          CartRepository cartRepository,ModelMapper modelMapper){
+                          CartRepository cartRepository,ModelMapper modelMapper,
+                          RedisTemplate<String, Object> redisTemplate){
         this.foodItemsRepository=foodItemsRepository;
         this.userRepository=userRepository;
         this.cartRepository=cartRepository;
         this.modelMapper=modelMapper;
+        this.redisTemplate=redisTemplate;
     }
 
     @Override
@@ -47,34 +56,40 @@ public class CartServiceImp implements CartService {
              throw new FoodItemNotAvailableException("This Food Item does not available, please select another one");
          }
 
-         Cart cart=cartRepository.findByCreator(user).orElseGet(
-                 ()->{
-                         Cart newcart=new Cart();
-                         newcart.setCreator(user);
-                         return newcart;
-                 }
-         );
+        String cartKey = "USER_CART:" + user.getId();
+        String fieldKey = String.valueOf(foodItems.getId());
+        Object existingObj = redisTemplate.opsForHash().get(cartKey, fieldKey);
 
+        CartItemResponseDto cartItemResponseDto=new CartItemResponseDto();
+         if(existingObj==null){
+             cartItemResponseDto.setFoodItem(modelMapper.map(foodItems,FoodItemsResponseDto.class));
+             cartItemResponseDto.setQuantities(addItemToCartdto.getQuantities());
+             cartItemResponseDto.setFinalPrice((foodItems.getPrice()* addItemToCartdto.getQuantities()));
+         }else{
+              cartItemResponseDto=(CartItemResponseDto) existingObj;
+             cartItemResponseDto.setQuantities(addItemToCartdto.getQuantities()+cartItemResponseDto.getQuantities());
+             cartItemResponseDto.setFinalPrice(addItemToCartdto.getQuantities()*foodItems.getPrice());
+         }
 
-         Optional<CartItem> existingItem=cart.getListFoodItems().stream().filter(x->x.getFoodItem().getId().equals(foodItems.getId())).findFirst();
+         CartItemResponseDto cartResponseDto=modelMapper.map(cartItemResponseDto, CartItemResponseDto.class);
 
-        if(existingItem.isEmpty()){
-            CartItem cartItem=new CartItem();
-            cartItem.setFoodItem(foodItems);
-            cartItem.setCart(cart);
-            cartItem.setQuantities(addItemToCartdto.getQuantities());
-            cartItem.setFinalPrice((foodItems.getPrice()* addItemToCartdto.getQuantities()));
-            cart.getListFoodItems().add(cartItem);
-        }else{
-           CartItem item=existingItem.get();
-           item.setQuantities(item.getQuantities()+addItemToCartdto.getQuantities());
-           item.setFinalPrice(item.getQuantities()*foodItems.getPrice());
+        redisTemplate.opsForHash().put(cartKey, fieldKey, cartResponseDto);
+
+        // 6. Fetch all items from Redis to calculate Cart Total & build Response
+        List<Object> allItemsObj = redisTemplate.opsForHash().values(cartKey);
+        List<CartItemResponseDto> cartItemList = new ArrayList<>();
+        Double total=0.0;
+        for (Object obj: allItemsObj){
+            CartItemResponseDto item = (CartItemResponseDto) obj;
+            cartItemList.add(item);
+            total+=item.getFinalPrice();
         }
-
-        Double total=cart.getListFoodItems().stream().mapToDouble(x->x.getFinalPrice()).sum();
-        cart.setCartTotal(total);
-        Cart cartResponse=cartRepository.save(cart);
-         CartResponseDto responseDto= modelMapper.map(cartResponse, CartResponseDto.class);
+//
+         CartResponseDto responseDto= new CartResponseDto();
+         responseDto.setId(user.getId());
+         responseDto.setCreatedAt(LocalDateTime.now());
+         responseDto.setTotalPrice(total);
+         responseDto.setListFoodItems(cartItemList);
          return responseDto;
     }
 
@@ -84,10 +99,16 @@ public class CartServiceImp implements CartService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UnauthorizedAccessException("You cannot access this feature"));
 
-        Cart cart = cartRepository.findByCreator(user)
-                .orElseThrow(() -> new CartDoesNotExistEception("Your cart is empty"));
 
-        return modelMapper.map(cart, CartResponseDto.class);
+
+        String cartKey=CART_PREFIX+user.getId();
+        Map<Object, Object> entries=redisTemplate.opsForHash().entries(cartKey);
+
+        if(entries.isEmpty()){
+            throw new CartDoesNotExistEception("cart does not exists");
+        }
+
+        return buildCartResponse(user.getId(), cartKey);
     }
 
     @Override
@@ -96,18 +117,25 @@ public class CartServiceImp implements CartService {
         String email= SecurityContextHolder.getContext().getAuthentication().getName();
         User user=userRepository.findByEmail(email).orElseThrow(()->new UnauthorizedAccessException("you cannot access this feature"));
 
-        Cart cart=cartRepository.findByCreator(user).orElseThrow(()->new CartDoesNotExistEception("Cart is empty or does not exist"));
-        CartItem itemToRemove=user.getCart().getListFoodItems().stream().filter(x->x.getFoodItem().getId().equals(foodItemId)).findFirst().orElseThrow(()-> new FoodItemNotExistsException("No food item exists in your cart"));
-        if(itemToRemove.getQuantities()>1){
-            itemToRemove.setQuantities(itemToRemove.getQuantities()-1);
-            itemToRemove.setFinalPrice(itemToRemove.getQuantities()*itemToRemove.getFoodItem().getPrice());
-        }else{
-            cart.getListFoodItems().remove(itemToRemove);
+        String cartKey = CART_PREFIX + user.getId();
+        String fieldKey = String.valueOf(foodItemId);
+
+        Object existingObj=redisTemplate.opsForHash().get(cartKey,fieldKey);
+        if(existingObj==null){
+            throw new CartDoesNotExistEception("Cart is empty or does not exist");
         }
-       double total=cart.getListFoodItems().stream().mapToDouble(x->x.getFinalPrice()).sum();
-        cart.setCartTotal(total);
-       Cart cartSaved=cartRepository.save(cart);
-       return modelMapper.map(cartSaved,CartResponseDto.class);
+
+        CartItemResponseDto cartItemResponseDto=(CartItemResponseDto) existingObj;
+        if(cartItemResponseDto.getQuantities()>1){
+            cartItemResponseDto.setQuantities(cartItemResponseDto.getQuantities()-1);
+            double singlePrice = cartItemResponseDto.getFinalPrice() / (cartItemResponseDto.getQuantities() + 1);
+            cartItemResponseDto.setFinalPrice(singlePrice*cartItemResponseDto.getQuantities());
+            redisTemplate.opsForHash().put(cartKey, fieldKey, cartItemResponseDto);
+        }else{
+            redisTemplate.opsForHash().delete(cartKey,fieldKey);
+        }
+
+        return buildCartResponse(user.getId(), cartKey);
     }
 
     @Override
@@ -116,9 +144,34 @@ public class CartServiceImp implements CartService {
         String email=SecurityContextHolder.getContext().getAuthentication().getName();
         User user=userRepository.findByEmail(email).orElseThrow(
                 ()->new UnauthorizedAccessException("you are not authorized to do this operation"));
-        Cart cart=cartRepository.findByCreator(user).orElseThrow(()->new CartDoesNotExistEception("no cart found"));
-        cartRepository.delete(cart);
+        String cartKey = CART_PREFIX + user.getId();
+        Boolean isDeleted = redisTemplate.delete(cartKey);
+
+        if (Boolean.FALSE.equals(isDeleted)) {
+            throw new CartDoesNotExistEception("No cart found to clear");
+        }
+
         return "Cart Cleared Successfully";
+
     }
 
+    private CartResponseDto buildCartResponse(Long userId, String cartKey) {
+        Map<Object, Object> allItemsObj = redisTemplate.opsForHash().entries(cartKey);
+        List<CartItemResponseDto> cartItemList = new ArrayList<>();
+        double total = 0.0;
+
+        for (Object obj : allItemsObj.values()) {
+            CartItemResponseDto item = (CartItemResponseDto) obj;
+            cartItemList.add(item);
+            total += item.getFinalPrice();
+        }
+
+        CartResponseDto responseDto = new CartResponseDto();
+        responseDto.setId(userId);
+        responseDto.setCreatedAt(LocalDateTime.now());
+        responseDto.setListFoodItems(cartItemList);
+        responseDto.setTotalPrice(total); // Grand total set karne ke liye
+
+        return responseDto;
+    }
 }
